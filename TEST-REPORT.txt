@@ -1,0 +1,18 @@
+_davUNINSTALL v0.11.5 RC
+
+Status: PASS
+Tests: 48/48 passed via `npm test`
+JavaScript syntax: PASS (`src/main.js`, `src/uninstall-engine.js`)
+Icon RGBA checks: PASS
+ZIP integrity: PASS (`unzip -t`)
+Native Rust/Tauri build in generation environment: unavailable (Cargo not installed)
+
+Pre-v1 hardening:
+- TEMP directories use newest descendant modification time.
+- symlinks/reparse points are excluded from destructive file operations.
+- TEMP scan/cleanup run off the UI thread.
+- localized default Registry values are handled.
+- launch/build scripts always synchronize npm dependencies.
+- unused legacy backend files/functions removed.
+
+Frontend dependency install/build attempt: npm install exceeded the available execution timeout; no node_modules/package-lock artifacts were retained.

@@ -1,0 +1,8 @@
+use crate::core::{result, ActionOptions, ActionResult};
+#[cfg(windows)] use winreg::{enums::*, RegKey};
+
+#[cfg(windows)] fn inventory()->String{let mut rows=Vec::new();let roots=[("HKLM64",RegKey::predef(HKEY_LOCAL_MACHINE),KEY_READ|KEY_WOW64_64KEY),("HKLM32",RegKey::predef(HKEY_LOCAL_MACHINE),KEY_READ|KEY_WOW64_32KEY),("HKCU",RegKey::predef(HKEY_CURRENT_USER),KEY_READ)];for (label,root,flags) in roots{if let Ok(key)=root.open_subkey_with_flags("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall",flags){for name in key.enum_keys().filter_map(Result::ok){if let Ok(app)=key.open_subkey_with_flags(&name,KEY_READ){let display:String=app.get_value("DisplayName").unwrap_or_default();if display.is_empty(){continue;}let version:String=app.get_value("DisplayVersion").unwrap_or_default();let publisher:String=app.get_value("Publisher").unwrap_or_default();let uninstall:String=app.get_value("UninstallString").unwrap_or_default();rows.push(format!("{} · {} · {} · {}\n{}",display,version,publisher,label,uninstall));}}}}rows.sort();rows.join("\n\n")}
+#[cfg(not(windows))] fn inventory()->String{"_davUNINSTALL v0.1.0 is a Windows-focused application. Inventory is unavailable on this operating system.".into()}
+
+#[tauri::command]
+pub fn run_action(action:String,_paths:Vec<String>,_options:ActionOptions)->ActionResult{if action!="inventory"{return result(false,"Preview safety lock","Uninstall and leftover deletion are intentionally disabled until inventory matching is validated",action);}let details=inventory();result(true,"Application inventory","Installed application data was read without modifying the system",details)}
