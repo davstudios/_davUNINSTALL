@@ -1,72 +1,69 @@
 # _davUNINSTALL
 
-_davUNINSTALL è l'utility di disinstallazione e pulizia residui della suite _davstudios. La release candidate v0.11.5 offre il flusso completo di disinstallazione, scansione profonda, backup e pulizia automatica su Windows. Su macOS e Linux, in questa RC, l'app rileva le applicazioni e analizza residui utente in sola lettura: la parità completa di disinstallazione/pulizia non è ancora abilitata.
+_davUNINSTALL è il disinstallatore e analizzatore di residui di _davstudios. La v1.0.1 mantiene il flusso completo di disinstallazione e pulizia profonda su Windows, con analisi locale, backup del Registro e verifica post-rimozione. Su macOS e Linux l'app mantiene il rilevamento e l'analisi conservativa, mentre le operazioni distruttive avanzate restano intenzionalmente limitate.
 
-## Funzioni della v0.11.5
+## Funzioni della v1.0.1
 
-- elenco applicazioni installate con ricerca e dettagli;
-- avvio del comando di disinstallazione registrato su Windows;
-- modalità di controllo eliminazione **Basso / Medio / Alto**;
-- scansione profonda dei residui del file system in posizioni software note e cartelle del produttore;
-- scansione mirata di chiavi e singoli valori del Registro Windows;
-- backup `.reg` prima di modificare chiavi o valori;
-- manifest locale della pulizia e rivalidazione immediatamente prima della rimozione;
-- file e cartelle residui inviati al Cestino di Windows;
-- verifica post-rimozione con rimossi, verificati, già assenti, errori ed elementi ancora presenti;
-- scansione forzata per programmi già disinstallati;
-- pulizia TEMP utente su Windows con soglia 7/14/30 giorni;
-- tema Sistema/Chiaro/Scuro, Italiano/English e design system condiviso con la suite _davstudios.
+- elenco delle applicazioni installate con ricerca, versione, produttore e percorso;
+- avvio del disinstallatore registrato su Windows, incluso supporto a percorsi quotati, variabili d'ambiente e richiesta UAC quando necessaria;
+- tre modalità di controllo eliminazione: **Basso**, **Medio** e **Alto**;
+- scansione profonda post-disinstallazione di file e cartelle nelle principali posizioni software di Windows;
+- scansione del Registro per chiavi e singoli valori attribuibili all'app tramite nome, publisher, percorso e GUID/Product Code;
+- scansione forzata per programmi già rimossi dall'elenco;
+- selezione manuale dei residui sicuri in modalità Media;
+- flusso automatico in modalità Alta con doppia conferma iniziale;
+- backup `.reg` prima delle modifiche al Registro e manifest locale delle operazioni;
+- rivalidazione immediatamente prima della rimozione;
+- verifica post-pulizia con conteggio di rimossi, verificati, già assenti, saltati, errori ed eventuali elementi ancora presenti;
+- file e cartelle rimossi tramite Cestino su Windows quando possibile;
+- pulizia prudente della cartella TEMP dell'utente su Windows con soglia 7/14/30 giorni;
+- esclusione di link simbolici e reparse point dalle operazioni distruttive;
+- tema Sistema/Chiaro/Scuro, Italiano/English e design system coerente con la suite _davstudios.
 
 ## Modalità di controllo eliminazione
 
-- **Basso**: avvia solo il disinstallatore ufficiale registrato.
-- **Medio**: dopo la disinstallazione consente di analizzare i residui e scegliere manualmente cosa rimuovere.
-- **Alto**: richiede due conferme iniziali, attende la chiusura reale del processo del disinstallatore e, solo se questo termina con un codice di successo, esegue scansione profonda e pulizia automatica dei soli candidati `Exact` / `High confidence` rivalidati dal backend.
+**Basso** avvia soltanto il disinstallatore ufficiale registrato. Non viene eseguita alcuna scansione automatica.
 
-La modalità Alta non amplia la whitelist: cartelle condivise, corrispondenze deboli o elementi ambigui restano esclusi. Se il disinstallatore restituisce un errore, la pulizia automatica non parte.
+**Medio** avvia il disinstallatore e lascia all'utente la scansione e la scelta manuale dei residui da rimuovere.
+
+**Alto** richiede due conferme esplicite, attende la chiusura reale del processo di disinstallazione, esegue la scansione profonda e rimuove automaticamente soltanto i candidati `Exact` / `High confidence` rivalidati dal backend. Corrispondenze deboli, directory condivise e elementi ambigui non vengono rimossi automaticamente.
 
 ## Sicurezza
 
-_davUNINSTALL non usa la semplice somiglianza di nome come autorizzazione alla rimozione. I candidati rimovibili devono essere classificati `Exact` o `High confidence`, vengono rigenerati dal backend al momento della pulizia e gli ID inviati dal frontend non possono trasformarsi in percorsi arbitrari.
+_davUNINSTALL non considera sufficiente una semplice somiglianza di nome. La rimozione accetta soltanto candidati esatti o ad alta confidenza prodotti dal backend e rivalidati al momento dell'operazione. Le chiavi del Registro interessate vengono esportate prima della modifica. Gli ID inviati dal frontend non possono trasformarsi in percorsi arbitrari.
 
-Su Windows le chiavi Registro vengono esportate prima della modifica. La pulizia del file system evita link simbolici e reparse point. La pulizia TEMP considera una cartella idonea solo se **la cartella e tutti i suoi elementi discendenti** non risultano modificati da almeno la soglia scelta; se non è possibile ispezionare in sicurezza un elemento, quella directory viene saltata.
+La pulizia TEMP è limitata alla cartella temporanea dell'utente su Windows. Per le directory viene considerata anche la data di modifica più recente dei contenuti, e link simbolici/reparse point vengono esclusi.
 
-## Compatibilità piattaforme
+## Supporto piattaforme
 
 ### Windows
 
-Flusso completo: elenco programmi, disinstallazione, modalità Alta, scansione file/cartelle, scansione e rimozione Registro, backup, verifica e pulizia TEMP.
+È la piattaforma con il flusso completo: rilevamento applicazioni, disinstallazione, scansione profonda, backup e pulizia di file/cartelle/Registro, modalità Alta automatica e pulizia TEMP.
 
 ### macOS
 
-Rilevamento delle app `.app` in `/Applications` e `~/Applications` e analisi conservativa dei residui utente. Disinstallazione e pulizia automatica restano in sola lettura nella RC.
+Rileva applicazioni `.app` in `/Applications` e `~/Applications` e consente analisi conservativa dei residui utente. La rimozione profonda automatica e la pulizia TEMP generalizzata non sono abilitate nella v1.0.1.
 
 ### Linux
 
-Rilevamento pacchetti `dpkg` e applicazioni Flatpak quando disponibili e analisi conservativa dei residui utente. Disinstallazione e pulizia automatica restano in sola lettura nella RC.
+Rileva pacchetti `dpkg` e applicazioni Flatpak quando gli strumenti sono disponibili e consente analisi conservativa. La rimozione profonda automatica e la pulizia TEMP generalizzata non sono abilitate nella v1.0.1.
 
 ## Avvio sviluppo
 
 ### Windows
 
-Esegui `RUN-WINDOWS.bat`. Il launcher libera eventuali vecchie sessioni di sviluppo di questo progetto, sincronizza le dipendenze npm e avvia Tauri.
+Esegui `RUN-WINDOWS.bat`.
 
 ### macOS / Linux
 
-Esegui `./RUN-MACOS.sh` o `./RUN-LINUX.sh`. Gli script sincronizzano le dipendenze npm prima dell'avvio.
+Esegui rispettivamente `./RUN-MACOS.sh` o `./RUN-LINUX.sh`.
 
 Sono richiesti Node.js/npm, Rust/Cargo e i prerequisiti Tauri 2 della piattaforma.
 
 ## Privacy
 
-L'analisi avviene localmente. _davUNINSTALL non invia l'elenco dei programmi, percorsi o dati del Registro a servizi online.
-
-## Protocollo di collaudo prima della v1.0.0
-
-Usa inizialmente programmi di terze parti non critici e facilmente reinstallabili. Verifica almeno un caso per ciascuna modalità Basso, Medio e Alto. In Medio controlla che i residui siano mostrati prima della rimozione; in Alto controlla che il flusso prosegua solo dopo la chiusura del disinstallatore e che la pagina Residui mostri il risultato finale.
-
-Per i primi collaudi evita driver, runtime Microsoft, antivirus, componenti hardware e software di sistema.
+L'analisi avviene localmente. _davUNINSTALL non invia elenco dei programmi, percorsi, chiavi del Registro o altri dati a servizi online.
 
 ## Versione
 
-v0.11.5 Release Candidate
+v1.0.1 · Release stabile

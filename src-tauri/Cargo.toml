@@ -1,6 +1,6 @@
 [package]
 name = "davuninstall"
-version = "0.11.5"
+version = "1.0.1"
 description = "_davUNINSTALL desktop application"
 authors = ["_davstudios"]
 edition = "2021"

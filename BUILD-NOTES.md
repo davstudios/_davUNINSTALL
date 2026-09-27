@@ -1,4 +1,4 @@
-# _davUNINSTALL v0.11.5 — Build Notes
+# _davUNINSTALL v1.0.1 — Build Notes
 
 ## Stack
 
@@ -7,32 +7,24 @@
 - JavaScript ES modules
 - Vite 8
 
-## Audit pre-v1.0.0
+## Sicurezza
 
-La v0.11.5 è una RC di rifinitura senza modifiche al flusso di disinstallazione già collaudato. L'audit ha verificato frontend, backend, modalità Basso/Medio/Alto, launcher, configurazione Tauri/Vite, Registro, pulizia residui, TEMP, icone e metadati.
+La pulizia dei residui usa una whitelist generata dal backend e accetta soltanto candidati `exact` / `high`. Gli elementi vengono rivalidati subito prima della rimozione. Su Windows le chiavi del Registro interessate vengono esportate prima della modifica e viene scritto un manifest JSON. File e cartelle vengono inviati al Cestino quando possibile.
 
-Correzioni introdotte:
+La modalità Alta automatizza il flusso protetto senza ampliare la whitelist: doppia conferma iniziale, attesa della chiusura reale del disinstallatore, scansione post-uninstall, selezione automatica dei soli candidati sicuri, pulizia e verifica finale.
 
-- launcher e script build/run sincronizzano sempre le dipendenze npm;
-- scansione e pulizia TEMP spostate su `spawn_blocking`;
-- una directory TEMP viene considerata vecchia solo in base all'elemento più recente contenuto al suo interno;
-- link simbolici e reparse point vengono esclusi da scansione/rimozione file e TEMP;
-- gestione dei nomi localizzati del valore predefinito del Registro, incluso `(Predefinito)`;
-- rimosse funzioni Rust obsolete e il vecchio sorgente `space.rs` non utilizzato;
-- documentazione e report riallineati alla release candidate corrente.
+La pulizia TEMP è limitata alla cartella TEMP dell'utente su Windows. Le directory vengono considerate eleggibili solo quando anche il contenuto più recente supera la soglia configurata. Link simbolici e reparse point sono esclusi dalle operazioni distruttive.
 
-## Sicurezza residui
+## Release
 
-La whitelist viene rigenerata al momento della pulizia. Vengono accettati soltanto candidati `Exact` / `High confidence`. Le chiavi Registro vengono esportate prima della modifica e i residui file system vengono inviati al Cestino Windows. Dopo l'operazione ogni elemento viene ricontrollato.
-
-La modalità Alta attende il processo reale del disinstallatore. Solo dopo un codice di uscita considerato riuscito avvia scansione e pulizia post-disinstallazione; eventuali vecchie voci `Uninstall` rimaste vengono analizzate come residui.
+La v1.0.1 è una patch release stabile di _davUNINSTALL che riallinea tutti i file e i metadati di release dopo l’aggiornamento del progetto, senza modifiche funzionali rispetto alla v1.0.0. Il workflow GitHub viene eseguito sui tag `v*`, verifica l'allineamento delle versioni tra tag, `package.json`, `tauri.conf.json` e `Cargo.toml`, esegue i test e pubblica installer Windows, macOS e Linux tramite `tauri-apps/tauri-action@v1`.
 
 ## Verifiche nell'ambiente di generazione
 
-- `npm test`: 48/48 test passati.
-- `node --check src/main.js`: superato.
-- `node --check src/uninstall-engine.js`: superato.
-- PNG Tauri: test RGBA superati.
-- Build Rust/Tauri nativa: non eseguibile in questo ambiente perché Rust/Cargo non è installato.
+- test Node.js del progetto;
+- controllo sintattico JavaScript;
+- validazione JSON di package/Tauri/capability;
+- verifica PNG Tauri in formato RGBA;
+- controllo integrità ZIP finale.
 
-Il collaudo nativo Windows dell'utente resta quindi indispensabile prima della v1.0.0.
+Nell'ambiente di generazione Rust/Cargo non è disponibile, quindi la build Tauri nativa non può essere eseguita localmente. È stato tentato anche `npm install --no-audit --no-fund` per una build frontend, ma l'installazione ha superato il timeout disponibile; gli artefatti parziali sono stati rimossi. La compilazione definitiva degli installer viene eseguita dal workflow GitHub sulle piattaforme previste.

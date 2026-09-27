@@ -15,9 +15,9 @@ const main=fs.readFileSync('src/main.js','utf8');
 test('Windows launcher preserves the proven suite flow',()=>{assert.match(launcher,/npm install --no-audit --no-fund/i);assert.match(launcher,/npm run desktop/i);assert.doesNotMatch(launcher,/if not exist \"node_modules/);assert.ok(launcher.indexOf('prepare-windows-dev.ps1')<launcher.indexOf('npm install --no-audit --no-fund'));});
 test('Vite preserves Tauri isolation',()=>{assert.match(vite,/const host = process\.env\.TAURI_DEV_HOST/);assert.match(vite,/src-tauri/);assert.match(vite,/strictPort:true/);});
 test('frontend and Tauri dependency versions match suite base',()=>{assert.equal(packageJson.dependencies['@tauri-apps/api'],'2.11.1');assert.equal(packageJson.devDependencies['@tauri-apps/cli'],'2.11.4');assert.equal(packageJson.devDependencies.vite,'8.2.2');});
-test('preview metadata is coherent',()=>{const rustVersion=cargo.match(/^version\s*=\s*"([^"]+)"/m)?.[1];assert.equal(packageJson.version,'0.11.5');assert.equal(tauri.version,packageJson.version);assert.equal(rustVersion,packageJson.version);for(const path of ['README.md','CHANGELOG.md','src-tauri/icons/icon.ico'])assert.equal(fs.existsSync(path),true);});
+test('stable metadata is coherent',()=>{const rustVersion=cargo.match(/^version\s*=\s*"([^"]+)"/m)?.[1];assert.equal(packageJson.version,'1.0.1');assert.equal(tauri.version,packageJson.version);assert.equal(rustVersion,packageJson.version);for(const path of ['README.md','CHANGELOG.md','src-tauri/icons/icon.ico'])assert.equal(fs.existsSync(path),true);});
 test('safety backend revalidates and backs up registry before deletion',()=>{assert.match(backend,/still_installed\(&request\.app\)/);assert.match(backend,/scan_residuals_sync_mode\(request\.app\.clone\(\),post_uninstall\)/);assert.match(backend,/confidence=="exact"\|\|item\.confidence=="high"/);assert.match(backend,/backup_registry\(&item\.path,&backup\)/);assert.match(backend,/execute_cleanup_plan_windows/);assert.match(backend,/reg\.exe delete \$item\.path/);assert.match(backend,/SendToRecycleBin/);});
-test('temporary cleanup is intentionally Windows-only in preview',()=>{assert.match(backend,/cfg\(target_os="windows"\)/);assert.match(backend,/supported:false/);});
+test('temporary cleanup is intentionally Windows-only in stable release',()=>{assert.match(backend,/cfg\(target_os="windows"\)/);assert.match(backend,/supported:false/);});
 test('suite visual tokens and motion are present',()=>{assert.match(styles,/--accent:#006edb/);assert.match(styles,/Plus Jakarta Sans/);assert.match(main,/Comprami Un Caffè/);assert.match(motion,/--motion-ease-out/);assert.match(motion,/prefers-reduced-motion/);});
 
 test('root layout matches the proven _davCONVERT shell',()=>{assert.match(styles,/html,body,#app\{margin:0;width:100%;height:100%/);assert.match(styles,/\.shell\{display:grid;grid-template-columns:220px 1fr;height:100vh\}/);assert.match(styles,/\.sidebar\{background:/);assert.match(styles,/\.main\{min-width:0;overflow:auto;padding:/);});
@@ -178,3 +178,6 @@ test('all platform launch and build scripts synchronize npm dependencies',()=>{
     assert.match(fs.readFileSync(file,'utf8'),/npm install --no-audit --no-fund/i);
   }
 });
+
+
+test('stable release workflow publishes installers',()=>{const workflow=fs.readFileSync('.github/workflows/release.yml','utf8');assert.match(workflow,/name: Release _davUNINSTALL/);assert.match(workflow,/push:[\s\S]*tags:[\s\S]*'v\*'/);assert.match(workflow,/Verify release versions/);assert.match(workflow,/tauri-apps\/tauri-action@v1/);assert.match(workflow,/releaseDraft: false/);assert.match(workflow,/prerelease: false/);assert.match(workflow,/github\.ref_name/);});

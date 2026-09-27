@@ -664,7 +664,7 @@ fn delete_path(path:&Path)->Result<(),String>{
         if path.exists(){Err(format!("L'elemento risulta ancora presente dopo la rimozione: {}",path.to_string_lossy()))}else{Ok(())}
     }
     #[cfg(not(target_os="windows"))]
-    {Err("La rimozione dei residui è in sola lettura su questa piattaforma in questa preview.".into())}
+    {Err("La rimozione dei residui è in sola lettura su questa piattaforma in questa versione.".into())}
 }
 
 
@@ -918,7 +918,7 @@ pub async fn run_uninstaller_and_wait(app:InstalledApp)->Result<i32,String>{
     #[cfg(target_os="windows")]
     {tauri::async_runtime::spawn_blocking(move||run_windows_uninstaller_and_wait(&app.uninstall_string)).await.map_err(|error|format!("Attesa disinstallatore interrotta: {error}"))?}
     #[cfg(not(target_os="windows"))]
-    {Err("La modalità Alta automatica è disponibile su Windows in questa release candidate.".into())}
+    {Err("La modalità Alta automatica è disponibile su Windows in questa versione stabile.".into())}
 }
 
 #[cfg(target_os="windows")]
@@ -938,7 +938,7 @@ fn spawn_windows_uninstaller(command:&str)->Result<(),String>{
 
 #[tauri::command]
 pub fn launch_uninstaller(app:InstalledApp)->Result<(),String>{
-    if !app.can_uninstall||app.uninstall_string.trim().is_empty(){return Err("Questa piattaforma o applicazione non espone un comando di disinstallazione gestibile in questa preview.".into());}
+    if !app.can_uninstall||app.uninstall_string.trim().is_empty(){return Err("Questa piattaforma o applicazione non espone un comando di disinstallazione gestibile in questa versione.".into());}
     #[cfg(target_os="windows")]
     {
         spawn_windows_uninstaller(&app.uninstall_string)?;
@@ -994,7 +994,7 @@ pub async fn scan_user_temp(min_age_days:u64)->Result<TempReport,String>{
 
 fn remove_temp_items_sync(request:TempCleanupRequest)->Result<CleanupResult,String>{
     let report=scan_user_temp_sync(request.min_age_days)?;
-    if !report.supported{return Err("La pulizia temporanei conservativa di questa preview è disponibile solo su Windows.".into());}
+    if !report.supported{return Err("La pulizia temporanei conservativa è disponibile solo su Windows.".into());}
     let allowed:HashMap<String,TempItem>=report.items.into_iter().filter(|item|item.safe_to_remove).map(|item|(item.id.clone(),item)).collect();
     let requested:HashSet<String>=request.item_ids.into_iter().collect();
     let backup=backup_root();
