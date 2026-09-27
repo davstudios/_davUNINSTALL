@@ -1,10 +1,10 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-title _davUNINSTALL v1.0.1
+title _davUNINSTALL v1.1.0
 
 echo ========================================
-echo          _davUNINSTALL v1.0.1
+echo          _davUNINSTALL v1.1.0
 echo ========================================
 echo.
 where node >nul 2>nul || goto node_error

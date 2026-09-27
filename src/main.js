@@ -30,7 +30,7 @@ const icons={
 const isTauri=Boolean(window.__TAURI_INTERNALS__);
 const defaults={theme:'system',language:'it',tempAgeDays:7,cleanupMode:'medium'};
 const saved=JSON.parse(localStorage.getItem('davuninstall-settings')||'{}');
-const state={page:'apps',version:'1.0.1',apps:[],query:'',selected:null,report:null,tempReport:null,forcedName:'',forcedPublisher:'',forcedPath:'',selectedResiduals:new Set(),selectedTemps:new Set(),lastCleanup:null,lastTempCleanup:null,busy:false,busyLabel:'',confirmUninstall:false,highConfirmStage:0,confirmResiduals:false,confirmTemps:false,autoPhase:'',autoAppName:'',autoAbortRequested:false,settings:{...defaults,...saved}};
+const state={page:'apps',version:'1.1.0',apps:[],query:'',selected:null,report:null,tempReport:null,forcedName:'',forcedPublisher:'',forcedPath:'',selectedResiduals:new Set(),selectedTemps:new Set(),lastCleanup:null,lastTempCleanup:null,busy:false,busyLabel:'',confirmUninstall:false,highConfirmStage:0,confirmResiduals:false,confirmTemps:false,autoPhase:'',autoAppName:'',autoAbortRequested:false,settings:{...defaults,...saved}};
 
 function t(it,en){return state.settings.language==='en'?en:it;}
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,(char)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));}

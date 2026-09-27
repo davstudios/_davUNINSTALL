@@ -1,4 +1,4 @@
-# _davUNINSTALL v1.0.1 — Build Notes
+# _davUNINSTALL v1.1.0 — Build Notes
 
 ## Stack
 
@@ -17,7 +17,7 @@ La pulizia TEMP è limitata alla cartella TEMP dell'utente su Windows. Le direct
 
 ## Release
 
-La v1.0.1 è una patch release stabile di _davUNINSTALL che riallinea tutti i file e i metadati di release dopo l’aggiornamento del progetto, senza modifiche funzionali rispetto alla v1.0.0. Il workflow GitHub viene eseguito sui tag `v*`, verifica l'allineamento delle versioni tra tag, `package.json`, `tauri.conf.json` e `Cargo.toml`, esegue i test e pubblica installer Windows, macOS e Linux tramite `tauri-apps/tauri-action@v1`.
+La v1.1.0 è una patch release stabile di _davUNINSTALL che riallinea tutti i file e i metadati di release dopo l’aggiornamento del progetto, senza modifiche funzionali rispetto alla v1.0.0. Il workflow GitHub viene eseguito sui tag `v*`, verifica l'allineamento delle versioni tra tag, `package.json`, `tauri.conf.json` e `Cargo.toml`, esegue i test e pubblica installer Windows, macOS e Linux tramite `tauri-apps/tauri-action@v1`.
 
 ## Verifiche nell'ambiente di generazione
 
@@ -28,3 +28,7 @@ La v1.0.1 è una patch release stabile di _davUNINSTALL che riallinea tutti i fi
 - controllo integrità ZIP finale.
 
 Nell'ambiente di generazione Rust/Cargo non è disponibile, quindi la build Tauri nativa non può essere eseguita localmente. È stato tentato anche `npm install --no-audit --no-fund` per una build frontend, ma l'installazione ha superato il timeout disponibile; gli artefatti parziali sono stati rimossi. La compilazione definitiva degli installer viene eseguita dal workflow GitHub sulle piattaforme previste.
+
+## v1.1.0
+
+Questa release aggiorna il set di icone Tauri a partire dall’`icon.ico` definitivo fornito per _davUNINSTALL e corregge il controllo CI del backend legacy _davSPACE in modo che verifichi l’assenza di riferimenti compilati anziché la sola presenza fisica di un file inutilizzato.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0
+
+- Nuova icona definitiva di _davUNINSTALL e set Tauri rigenerato per Windows, macOS e Linux.
+- Corretto il test CI sul vecchio backend _davSPACE: ora verifica che il modulo non venga compilato né referenziato, senza fallire per un file legacy non utilizzato rimasto nel repository.
+- Versioni, metadati, documentazione e workflow sincronizzati su `1.1.0`.
+
+
 ## 1.0.1
 - Patch release di riallineamento dopo l’aggiornamento del file di release.
 - Versioni, metadati, launcher, documentazione, test e workflow sincronizzati su `1.0.1`.

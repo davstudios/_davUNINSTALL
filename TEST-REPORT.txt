@@ -1,7 +1,8 @@
-_davUNINSTALL v1.0.1 Stable
+_davUNINSTALL v1.1.0 Stable
 
 Status: PASS
 Tests: 49/49 passed via `npm test`
-JavaScript syntax: PASS (`src/main.js`, `src/uninstall-engine.js`)
-JSON configuration: PASS
-Stable release workflow: present and version-alignment guarded
+JavaScript syntax: PASS
+Tauri PNG icons: RGBA PASS
+Definitive icon.ico: byte-identical to supplied source
+Legacy _davSPACE module: not referenced; not shipped in package
