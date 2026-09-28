@@ -1,8 +1,9 @@
-_davUNINSTALL v1.1.0 Stable
+_davUNINSTALL v1.1.1
 
 Status: PASS
-Tests: 49/49 passed via `npm test`
-JavaScript syntax: PASS
-Tauri PNG icons: RGBA PASS
-Definitive icon.ico: byte-identical to supplied source
-Legacy _davSPACE module: not referenced; not shipped in package
+Tests: 50/50 passed via `npm test`
+Patch scope:
+- Linux GitHub Actions disables unrelated packages.microsoft.com APT sources before apt metadata refresh.
+- APT metadata refresh uses retries; Tauri dependencies use --no-install-recommends.
+- Windows/macOS build logic and application behavior are unchanged from v1.1.0.
+- The definitive icon set from v1.1.0 is preserved byte-for-byte for icon.ico.

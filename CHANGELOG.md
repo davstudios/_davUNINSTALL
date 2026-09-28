@@ -1,11 +1,16 @@
 # Changelog
 
+## 1.1.1
+
+- Corretto il job Linux di GitHub Actions: il workflow disabilita le sorgenti APT `packages.microsoft.com`, non necessarie alla build Tauri, che sul runner possono rispondere `403 Forbidden` prima di eseguire `apt-get update`.
+- Aggiunti retry ad APT e installazione `--no-install-recommends` delle sole dipendenze Tauri necessarie.
+- Nessuna modifica funzionale all'app rispetto alla v1.1.0.
+
 ## 1.1.0
 
-- Nuova icona definitiva di _davUNINSTALL e set Tauri rigenerato per Windows, macOS e Linux.
-- Corretto il test CI sul vecchio backend _davSPACE: ora verifica che il modulo non venga compilato né referenziato, senza fallire per un file legacy non utilizzato rimasto nel repository.
-- Versioni, metadati, documentazione e workflow sincronizzati su `1.1.0`.
-
+- Aggiornata l’icona definitiva di _davUNINSTALL e rigenerato il set Tauri per Windows, macOS e Linux.
+- Eliminato il backend legacy `_davSPACE` dal pacchetto e corretto il relativo controllo di progetto.
+- Versioni e metadati sincronizzati su `1.1.0`.
 
 ## 1.0.1
 - Patch release di riallineamento dopo l’aggiornamento del file di release.

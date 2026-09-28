@@ -1,6 +1,6 @@
 {
   "name": "davuninstall-app",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "type": "module",
   "description": "_davUNINSTALL — Windows-first application uninstaller and cross-platform residual analyzer by _davstudios.",

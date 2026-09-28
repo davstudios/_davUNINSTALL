@@ -1,8 +1,8 @@
 # _davUNINSTALL
 
-_davUNINSTALL è il disinstallatore e analizzatore di residui di _davstudios. La v1.1.0 mantiene il flusso completo di disinstallazione e pulizia profonda su Windows, con analisi locale, backup del Registro e verifica post-rimozione. Su macOS e Linux l'app mantiene il rilevamento e l'analisi conservativa, mentre le operazioni distruttive avanzate restano intenzionalmente limitate.
+_davUNINSTALL è il disinstallatore e analizzatore di residui di _davstudios. La v1.1.1 mantiene il flusso completo di disinstallazione e pulizia profonda su Windows, con analisi locale, backup del Registro e verifica post-rimozione. Su macOS e Linux l'app mantiene il rilevamento e l'analisi conservativa, mentre le operazioni distruttive avanzate restano intenzionalmente limitate.
 
-## Funzioni della v1.1.0
+## Funzioni della v1.1.1
 
 - elenco delle applicazioni installate con ricerca, versione, produttore e percorso;
 - avvio del disinstallatore registrato su Windows, incluso supporto a percorsi quotati, variabili d'ambiente e richiesta UAC quando necessaria;
@@ -42,11 +42,11 @@ La pulizia TEMP è limitata alla cartella temporanea dell'utente su Windows. Per
 
 ### macOS
 
-Rileva applicazioni `.app` in `/Applications` e `~/Applications` e consente analisi conservativa dei residui utente. La rimozione profonda automatica e la pulizia TEMP generalizzata non sono abilitate nella v1.1.0.
+Rileva applicazioni `.app` in `/Applications` e `~/Applications` e consente analisi conservativa dei residui utente. La rimozione profonda automatica e la pulizia TEMP generalizzata non sono abilitate nella v1.1.1.
 
 ### Linux
 
-Rileva pacchetti `dpkg` e applicazioni Flatpak quando gli strumenti sono disponibili e consente analisi conservativa. La rimozione profonda automatica e la pulizia TEMP generalizzata non sono abilitate nella v1.1.0.
+Rileva pacchetti `dpkg` e applicazioni Flatpak quando gli strumenti sono disponibili e consente analisi conservativa. La rimozione profonda automatica e la pulizia TEMP generalizzata non sono abilitate nella v1.1.1.
 
 ## Avvio sviluppo
 
@@ -66,4 +66,4 @@ L'analisi avviene localmente. _davUNINSTALL non invia elenco dei programmi, perc
 
 ## Versione
 
-v1.1.0 · Release stabile
+v1.1.1 · Release stabile

@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Existing tag to build, for example v1.1.0'
+        description: 'Existing tag to build, for example v1.1.1'
         required: true
         type: string
 
@@ -33,9 +33,18 @@ jobs:
 
       - name: Install Linux dependencies
         if: matrix.platform == 'ubuntu-22.04'
+        shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
+          set -euo pipefail
+          sudo sed -i '\|packages.microsoft.com|d' /etc/apt/sources.list 2>/dev/null || true
+          for source_file in /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
+            [ -f "$source_file" ] || continue
+            if sudo grep -q 'packages.microsoft.com' "$source_file"; then
+              sudo mv "$source_file" "${source_file}.disabled-davuninstall"
+            fi
+          done
+          sudo apt-get -o Acquire::Retries=3 update
+          sudo apt-get install -y --no-install-recommends libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
