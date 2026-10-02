@@ -1,13 +1,8 @@
-# _davUNINSTALL v1.1.1 — Build Notes
+# BUILD NOTES — _davUNINSTALL v26.10.1
 
-## Stack
+Stack: Tauri 2, Rust 2021, JavaScript ES modules e Vite 8.
 
-- Tauri 2
-- Rust 2021
-- JavaScript ES modules
-- Vite 8
-
-## Sicurezza
+## Motore e sicurezza
 
 La pulizia dei residui usa una whitelist generata dal backend e accetta soltanto candidati `exact` / `high`. Gli elementi vengono rivalidati subito prima della rimozione. Su Windows le chiavi del Registro interessate vengono esportate prima della modifica e viene scritto un manifest JSON. File e cartelle vengono inviati al Cestino quando possibile.
 
@@ -15,22 +10,29 @@ La modalità Alta automatizza il flusso protetto senza ampliare la whitelist: do
 
 La pulizia TEMP è limitata alla cartella TEMP dell'utente su Windows. Le directory vengono considerate eleggibili solo quando anche il contenuto più recente supera la soglia configurata. Link simbolici e reparse point sono esclusi dalle operazioni distruttive.
 
-## Release
+## Standard release
 
-La v1.1.1 è una patch release stabile dedicata al workflow Linux. Windows, macOS e il comportamento dell’app restano invariati rispetto alla v1.1.0. Prima di `apt-get update`, il job Ubuntu disabilita le sorgenti APT `packages.microsoft.com`, che non sono necessarie alla build Tauri e possono restituire HTTP 403 sui runner GitHub; APT usa inoltre retry e installa soltanto le dipendenze richieste con `--no-install-recommends`.
+La v26.10.1 adotta il versioning `YY.M.REVISIONE` e i metadata ufficiali `_davstudios`. L'identifier storico `studio.dav.uninstall` resta invariato. La categoria pacchetto è `Productivity`; le build Linux includono metadata Debian `section=utils` e `priority=optional`.
+
+`.github/workflows/release.yml` si attiva sui tag `v*`, verifica la sincronizzazione di `package.json`, `package-lock.json`, `tauri.conf.json`, `Cargo.toml` e `Cargo.lock`, richiede nel commit associato al tag una Description contenente entrambe le sezioni 🇮🇹 e 🇺🇸, esegue i test e pubblica una GitHub Release stabile usando automaticamente quella Description come corpo della release:
+
+- Windows: NSIS
+- macOS: Universal DMG
+- Linux: AppImage + DEB
+
+Il job Linux disabilita preventivamente eventuali repository Microsoft presenti sul runner Ubuntu che possono restituire HTTP 403 pur non essendo necessari alla build Tauri.
+
+Il controllo di `Cargo.lock` accetta terminatori di riga sia LF sia CRLF; `.gitattributes` normalizza inoltre `Cargo.lock` e gli script shell a LF per ridurre le differenze tra checkout Windows, macOS e Linux.
 
 ## Verifiche nell'ambiente di generazione
 
-- test Node.js del progetto;
+- suite Node.js del progetto;
 - controllo sintattico JavaScript;
 - validazione JSON di package/Tauri/capability;
+- verifica del workflow YAML;
 - verifica PNG Tauri in formato RGBA;
+- controllo sincronizzazione versioni e lockfile;
+- simulazione `Cargo.lock` con terminatori Windows CRLF;
 - controllo integrità ZIP finale.
 
-Nell'ambiente di generazione Rust/Cargo non è disponibile, quindi la build Tauri nativa non può essere eseguita localmente. È stato tentato anche `npm install --no-audit --no-fund` per una build frontend, ma l'installazione ha superato il timeout disponibile; gli artefatti parziali sono stati rimossi. La compilazione definitiva degli installer viene eseguita dal workflow GitHub sulle piattaforme previste.
-
-## v1.1.1
-
-- Corretto il job Linux di GitHub Actions contro errori esterni delle sorgenti `packages.microsoft.com`.
-- Conservato integralmente il set di icone definitivo introdotto in v1.1.0.
-- Nessuna modifica funzionale al motore di disinstallazione.
+La compilazione Tauri nativa finale resta demandata all'ambiente di sviluppo e ai runner GitHub quando Rust/Cargo o le dipendenze native di piattaforma non sono disponibili nell'ambiente di preparazione.

@@ -1,9 +1,15 @@
-_davUNINSTALL v1.1.1
+_davUNINSTALL v26.10.1
 
 Status: PASS
-Tests: 50/50 passed via `npm test`
-Patch scope:
-- Linux GitHub Actions disables unrelated packages.microsoft.com APT sources before apt metadata refresh.
-- APT metadata refresh uses retries; Tauri dependencies use --no-install-recommends.
-- Windows/macOS build logic and application behavior are unchanged from v1.1.0.
-- The definitive icon set from v1.1.0 is preserved byte-for-byte for icon.ico.
+Tests: 56/56 passed via `npm test`.
+Windows CRLF regression: the complete 56-test suite also passes with `src-tauri/Cargo.lock` physically converted to CRLF line endings.
+JavaScript: source, test and Vite configuration syntax checks passed with `node --check`.
+JSON: package, package-lock, Tauri and capability configuration parsed successfully.
+YAML: `.github/workflows/release.yml` parsed successfully.
+Version sync: package.json, package-lock.json, Cargo.toml, Cargo.lock and Tauri configuration are aligned on 26.10.1.
+Metadata: _davstudios publisher, davstudios.it homepage, © 2026 copyright, MIT license, Productivity category and Debian metadata verified.
+Stable release: GitHub Actions builds Windows NSIS, macOS Universal DMG and Linux AppImage/DEB, reads the bilingual 🇮🇹/🇺🇸 Description from the tagged commit and rejects release commits missing either language section.
+Linux hardening: Microsoft apt repositories are disabled when present before installing the Ubuntu Tauri dependencies.
+Functional preservation: uninstall/residual engine, Windows Registry safety flow, TEMP cleanup, Rust backend, styles, motion, Vite configuration and application shell remain unchanged; `src/main.js` only removes the obsolete hardcoded version fallback and continues to read the application version from Tauri.
+Icons: existing Tauri icon assets remain unchanged.
+Rust/Tauri native compile: not executed in this environment because Cargo is unavailable; final native build is delegated to the development machine/GitHub Actions runners.

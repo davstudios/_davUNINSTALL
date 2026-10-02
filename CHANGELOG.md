@@ -1,5 +1,17 @@
 # Changelog
 
+## 26.10.1
+
+- Adottato il nuovo standard di release `_davstudios` e il sistema di versioning `YY.M.REVISIONE`.
+- Sincronizzate le versioni in `package.json`, `package-lock.json`, `Cargo.toml`, `Cargo.lock`, configurazione Tauri, documentazione e test.
+- Standardizzati publisher, homepage, copyright, licenza MIT, categoria Productivity, descrizioni del pacchetto e metadata Debian per Linux.
+- Mantenuto invariato l'identifier storico `studio.dav.uninstall`.
+- Aggiunte al README le istruzioni per release non firmate su Windows SmartScreen, macOS Gatekeeper e Linux AppImage.
+- Il workflow GitHub Actions usa la Description bilingue 🇮🇹/🇺🇸 del commit associato al tag come corpo della GitHub Release e ne verifica la presenza prima della pubblicazione.
+- Mantenuto l'hardening Linux contro repository Microsoft non raggiungibili sui runner Ubuntu.
+- Aggiunto il controllo completo di sincronizzazione dei lockfile con regressione per terminatori Windows CRLF.
+- Nessuna modifica funzionale al motore di disinstallazione, scansione residui, backup Registro, cleanup TEMP, interfaccia o logica di sicurezza.
+
 ## 1.1.1
 
 - Corretto il job Linux di GitHub Actions: il workflow disabilita le sorgenti APT `packages.microsoft.com`, non necessarie alla build Tauri, che sul runner possono rispondere `403 Forbidden` prima di eseguire `apt-get update`.

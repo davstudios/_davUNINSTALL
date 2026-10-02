@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Existing tag to build, for example v1.1.1'
+        description: 'Existing tag to build, for example v26.10.1'
         required: true
         type: string
 
@@ -60,11 +60,21 @@ jobs:
           import fs from 'node:fs';
           const tag = process.env.RELEASE_TAG;
           const expected = tag.replace(/^v/, '');
-          const packageVersion = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
-          const tauriVersion = JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json', 'utf8')).version;
+          const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const packageLock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
+          const tauri = JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json', 'utf8'));
           const cargoText = fs.readFileSync('src-tauri/Cargo.toml', 'utf8');
           const cargoVersion = cargoText.match(/^version\s*=\s*"([^"]+)"/m)?.[1];
-          const versions = { packageVersion, tauriVersion, cargoVersion };
+          const cargoLockText = fs.readFileSync('src-tauri/Cargo.lock', 'utf8');
+          const cargoLockVersion = cargoLockText.match(/\[\[package\]\]\r?\nname = "davuninstall"\r?\nversion = "([^"]+)"/)?.[1];
+          const versions = {
+            packageVersion: packageJson.version,
+            packageLockVersion: packageLock.version,
+            packageLockRootVersion: packageLock.packages?.['']?.version,
+            tauriVersion: tauri.version,
+            cargoVersion,
+            cargoLockVersion
+          };
           const mismatches = Object.entries(versions).filter(([, value]) => value !== expected);
           if (mismatches.length) {
             console.error(`Release tag ${tag} expects app version ${expected}.`);
@@ -73,6 +83,29 @@ jobs:
           }
           console.log(`Release versions are aligned on ${expected}.`);
           NODE
+
+      - name: Read release description from tagged commit
+        id: release_description
+        shell: bash
+        run: |
+          body="$(git log -1 --pretty=%b)"
+
+          if [[ -z "${body//[[:space:]]/}" ]]; then
+            echo "The tagged commit has no Description/body." >&2
+            exit 1
+          fi
+
+          if [[ "$body" != *"🇮🇹"* || "$body" != *"🇺🇸"* ]]; then
+            echo "The commit Description must contain both 🇮🇹 and 🇺🇸 sections." >&2
+            exit 1
+          fi
+
+          delimiter="DAV_RELEASE_BODY_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}"
+          {
+            echo "body<<$delimiter"
+            printf '%s\n' "$body"
+            echo "$delimiter"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
@@ -97,8 +130,7 @@ jobs:
         with:
           tagName: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
           releaseName: '_davUNINSTALL v__VERSION__'
-          releaseBody: 'Stable release of _davUNINSTALL. Download the installer for your operating system from the assets below.'
+          releaseBody: ${{ steps.release_description.outputs.body }}
           releaseDraft: false
           prerelease: false
-          generateReleaseNotes: true
           args: ${{ matrix.args }}

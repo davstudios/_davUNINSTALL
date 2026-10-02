@@ -1,6 +1,6 @@
 {
   "name": "davuninstall-app",
-  "version": "1.1.1",
+  "version": "26.10.1",
   "private": true,
   "type": "module",
   "description": "_davUNINSTALL — Windows-first application uninstaller and cross-platform residual analyzer by _davstudios.",
@@ -20,5 +20,8 @@
   "devDependencies": {
     "@tauri-apps/cli": "2.11.4",
     "vite": "8.2.2"
-  }
+  },
+  "author": "_davstudios",
+  "license": "MIT",
+  "homepage": "https://davstudios.it"
 }
