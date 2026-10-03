@@ -282,3 +282,4 @@ function toast(message){const region=document.querySelector('#toast-region');if(
 
 async function init(){applyTheme();document.addEventListener('click',()=>document.querySelectorAll('.dav-select.is-open').forEach((node)=>node.classList.remove('is-open')));if(isTauri){try{state.version=await getVersion();}catch{}}render('startup');if(isTauri)loadApps();}
 init();
+

@@ -5,3 +5,4 @@ export function riskLabel(confidence,language='it'){const it={exact:'Esatto',hig
 export function safeItems(report){return [...(report?.filesystem||[]),...(report?.registry||[])].filter((item)=>item.safeToRemove&&(item.confidence==='exact'||item.confidence==='high'));}
 export function selectedSafeIds(report,selected){const allowed=new Set(safeItems(report).map((item)=>item.id));return [...selected].filter((id)=>allowed.has(id));}
 export function platformCanUninstall(app){return Boolean(app?.canUninstall&&app?.uninstallString);}
+

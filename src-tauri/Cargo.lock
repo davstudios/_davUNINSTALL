@@ -664,7 +664,7 @@ dependencies = [
 
 [[package]]
 name = "davuninstall"
-version = "26.10.1"
+version = "26.10.2"
 dependencies = [
  "serde",
  "serde_json",

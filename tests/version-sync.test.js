@@ -15,7 +15,7 @@ const cargoLockVersion = cargoLockText.match(/\[\[package\]\]\r?\nname = "davuni
 const mainSource = readFileSync(resolve(root, 'src/main.js'), 'utf8');
 
 test('versioni tecniche sincronizzate', () => {
-  assert.equal(packageVersion, '26.10.1');
+  assert.equal(packageVersion, '26.10.2');
   assert.equal(packageLock.version, packageVersion);
   assert.equal(packageLock.packages[''].version, packageVersion);
   assert.equal(tauriVersion, packageVersion);
@@ -34,3 +34,4 @@ test('interfaccia legge versione da Tauri', () => {
   assert.doesNotMatch(mainSource, /v\d+\.\d+\.\d+/);
   assert.doesNotMatch(mainSource, /version:'\d+\.\d+\.\d+'/);
 });
+

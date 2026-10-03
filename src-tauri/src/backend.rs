@@ -6,3 +6,4 @@ use crate::core::{result, ActionOptions, ActionResult};
 
 #[tauri::command]
 pub fn run_action(action:String,_paths:Vec<String>,_options:ActionOptions)->ActionResult{if action!="inventory"{return result(false,"Preview safety lock","Uninstall and leftover deletion are intentionally disabled until inventory matching is validated",action);}let details=inventory();result(true,"Application inventory","Installed application data was read without modifying the system",details)}
+

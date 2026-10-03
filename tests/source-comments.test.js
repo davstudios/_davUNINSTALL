@@ -17,3 +17,4 @@ test('sorgenti senza commenti',()=>{
   const findings=paths.filter(hasComment).map((path)=>path.slice(root.length+1));
   assert.deepEqual(findings,[]);
 });
+

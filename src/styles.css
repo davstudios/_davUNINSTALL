@@ -104,3 +104,4 @@
 .uninstall-residuals-page .residual-row:not(.locked):hover{transform:translate3d(3px,0,0);box-shadow:0 10px 24px rgba(0,0,0,.05)}
 [data-theme="dark"] .uninstall-residuals-page .residual-row:not(.locked):hover{box-shadow:0 12px 28px rgba(0,0,0,.22)}
 .uninstall-residuals-page .forced-scan-panel{background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 97%,transparent),color-mix(in srgb,var(--accent) 2.5%,var(--surface)))}
+

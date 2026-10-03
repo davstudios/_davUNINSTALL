@@ -13,3 +13,4 @@ test('formatta dimensioni',()=>{assert.equal(formatBytes(0),'0 B');assert.match(
 test('classifica confidenza in italiano e inglese',()=>{assert.equal(riskLabel('exact','it'),'Esatto');assert.equal(riskLabel('high','en'),'High');});
 test('accetta solo residui sicuri ad alta confidenza',()=>{const report={filesystem:[{id:'1',safeToRemove:true,confidence:'exact'},{id:'2',safeToRemove:true,confidence:'medium'}],registry:[{id:'3',safeToRemove:true,confidence:'high'},{id:'4',safeToRemove:false,confidence:'exact'}]};assert.deepEqual(safeItems(report).map(x=>x.id),['1','3']);assert.deepEqual(selectedSafeIds(report,new Set(['1','2','3','4'])),['1','3']);});
 test('abilita disinstallazione solo con comando registrato',()=>{assert.equal(platformCanUninstall(apps[0]),true);assert.equal(platformCanUninstall(apps[1]),false);});
+

@@ -1,8 +1,8 @@
 # _davUNINSTALL
 
-_davUNINSTALL è il disinstallatore e analizzatore di residui di _davstudios. La v26.10.1 adotta il nuovo standard di release `_davstudios` e il versioning `YY.M.REVISIONE`, mantenendo invariato il flusso completo di disinstallazione e pulizia profonda su Windows, con analisi locale, backup del Registro e verifica post-rimozione. Su macOS e Linux l'app mantiene il rilevamento e l'analisi conservativa, mentre le operazioni distruttive avanzate restano intenzionalmente limitate.
+_davUNINSTALL è il disinstallatore e analizzatore di residui di _davstudios. La v26.10.2 adotta il nuovo standard di release `_davstudios` e il versioning `YY.M.REVISIONE`, mantenendo invariato il flusso completo di disinstallazione e pulizia profonda su Windows, con analisi locale, backup del Registro e verifica post-rimozione. Su macOS e Linux l'app mantiene il rilevamento e l'analisi conservativa, mentre le operazioni distruttive avanzate restano intenzionalmente limitate.
 
-## Funzioni della v26.10.1
+## Funzioni della v26.10.2
 
 - elenco delle applicazioni installate con ricerca, versione, produttore e percorso;
 - avvio del disinstallatore registrato su Windows, incluso supporto a percorsi quotati, variabili d'ambiente e richiesta UAC quando necessaria;
@@ -42,11 +42,11 @@ La pulizia TEMP è limitata alla cartella temporanea dell'utente su Windows. Per
 
 ### macOS
 
-Rileva applicazioni `.app` in `/Applications` e `~/Applications` e consente analisi conservativa dei residui utente. La rimozione profonda automatica e la pulizia TEMP generalizzata non sono abilitate nella v26.10.1.
+Rileva applicazioni `.app` in `/Applications` e `~/Applications` e consente analisi conservativa dei residui utente. La rimozione profonda automatica e la pulizia TEMP generalizzata non sono abilitate nella v26.10.2.
 
 ### Linux
 
-Rileva pacchetti `dpkg` e applicazioni Flatpak quando gli strumenti sono disponibili e consente analisi conservativa. La rimozione profonda automatica e la pulizia TEMP generalizzata non sono abilitate nella v26.10.1.
+Rileva pacchetti `dpkg` e applicazioni Flatpak quando gli strumenti sono disponibili e consente analisi conservativa. La rimozione profonda automatica e la pulizia TEMP generalizzata non sono abilitate nella v26.10.2.
 
 ## Installazione delle release GitHub non firmate
 
@@ -78,7 +78,7 @@ Scarica sempre le release dalla repository GitHub ufficiale di `_davstudios`. Qu
 - Licenza: MIT
 - Categoria: Productivity
 - Bundle identifier: `studio.dav.uninstall`
-- Versione corrente: `26.10.1`
+- Versione corrente: `26.10.2`
 
 ## Installing unsigned GitHub releases
 
@@ -110,7 +110,7 @@ Always download releases from the official `_davstudios` GitHub repository. When
 - License: MIT
 - Category: Productivity
 - Bundle identifier: `studio.dav.uninstall`
-- Current version: `26.10.1`
+- Current version: `26.10.2`
 
 ## Avvio sviluppo
 
@@ -138,4 +138,5 @@ L'analisi avviene localmente. _davUNINSTALL non invia elenco dei programmi, perc
 
 ## Versione
 
-v26.10.1 · Release stabile
+v26.10.2 · Release stabile
+

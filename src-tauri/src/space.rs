@@ -135,3 +135,4 @@ pub fn reveal_path(path:String)->Result<(),String>{
     let status=Command::new("xdg-open").arg(if target.is_dir(){target.clone()}else{target.parent().unwrap_or(Path::new("/")).to_path_buf()}).status();
     status.map_err(|error|error.to_string()).and_then(|status|if status.success(){Ok(())}else{Err("Impossibile aprire il percorso.".into())})
 }
+

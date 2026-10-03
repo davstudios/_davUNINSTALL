@@ -1,5 +1,10 @@
 # Changelog
 
+## 26.10.2
+- Eseguita la repository normalization completa dell’intero pacchetto: tutti i file tracciati ricevono una modifica reale ma neutra per riallinearli al commit della release corrente.
+- Sincronizzata la versione 26.10.2 in package.json, package-lock.json, Cargo.toml, Cargo.lock, configurazione Tauri, documentazione e test.
+- Preservata integralmente la logica di disinstallazione, scansione residui, backup Registro, pulizia TEMP e controlli di sicurezza.
+
 ## 26.10.1
 
 - Adottato il nuovo standard di release `_davstudios` e il sistema di versioning `YY.M.REVISIONE`.
@@ -84,3 +89,4 @@
 
 ## 0.1.0
 - Prima preview di _davUNINSTALL.
+
