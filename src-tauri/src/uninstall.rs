@@ -8,6 +8,19 @@ use std::process::Command;
 use std::time::{SystemTime,UNIX_EPOCH};
 use walkdir::WalkDir;
 
+#[cfg(target_os="windows")]
+use std::os::windows::process::CommandExt;
+
+#[cfg(target_os="windows")]
+const CREATE_NO_WINDOW:u32=0x08000000;
+
+#[cfg(target_os="windows")]
+fn hidden_windows_command(program:&str)->Command{
+    let mut command=Command::new(program);
+    command.creation_flags(CREATE_NO_WINDOW);
+    command
+}
+
 #[derive(Clone,Debug,Serialize,Deserialize)]
 #[serde(rename_all="camelCase")]
 pub struct InstalledApp{
@@ -140,7 +153,7 @@ fn backup_root()->PathBuf{
 
 #[cfg(target_os="windows")]
 fn powershell(script:&str)->Result<String,String>{
-    let output=Command::new("powershell.exe").args(["-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-Command",script]).output().map_err(|e|e.to_string())?;
+    let output=hidden_windows_command("powershell.exe").args(["-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-Command",script]).output().map_err(|e|e.to_string())?;
     if !output.status.success(){return Err(String::from_utf8_lossy(&output.stderr).trim().to_string());}
     Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
 }
@@ -235,7 +248,7 @@ fn still_installed(app:&InstalledApp)->bool{
     #[cfg(target_os="windows")]
     {
         if app.source=="Windows Registry"&&!app.registry_key.trim().is_empty(){
-            return Command::new("reg.exe").args(["query",app.registry_key.as_str()]).output().map(|output|output.status.success()).unwrap_or(true);
+            return hidden_windows_command("reg.exe").args(["query",app.registry_key.as_str()]).output().map(|output|output.status.success()).unwrap_or(true);
         }
     }
     installed_apps().map(|apps|apps.iter().any(|current|current.id==app.id||(app.source=="Forced Scan"&&normalize(&current.name)==normalize(&app.name)))).unwrap_or(true)
@@ -392,7 +405,7 @@ fn filesystem_candidates(app:&InstalledApp,safe:bool)->Vec<ResidualItem>{
 
 #[cfg(target_os="windows")]
 fn reg_subkeys(parent:&str)->Vec<String>{
-    let Ok(output)=Command::new("reg.exe").args(["query",parent]).output()else{return Vec::new();};
+    let Ok(output)=hidden_windows_command("reg.exe").args(["query",parent]).output()else{return Vec::new();};
     if !output.status.success(){return Vec::new();}
     String::from_utf8_lossy(&output.stdout).lines().map(str::trim).filter(|line|line.starts_with("HKEY_")&&*line!=parent).map(str::to_string).collect()
 }
@@ -436,7 +449,7 @@ fn parse_reg_search(output:&[u8])->Vec<RegistrySearchMatch>{
 #[cfg(target_os="windows")]
 fn reg_search(root:&str,needle:&str)->Vec<RegistrySearchMatch>{
     if needle.trim().is_empty(){return Vec::new();}
-    let Ok(output)=Command::new("reg.exe").args(["query",root,"/f",needle,"/s"]).output()else{return Vec::new();};
+    let Ok(output)=hidden_windows_command("reg.exe").args(["query",root,"/f",needle,"/s"]).output()else{return Vec::new();};
     if !output.status.success()&&output.stdout.is_empty(){return Vec::new();}
     parse_reg_search(&output.stdout)
 }
@@ -612,7 +625,7 @@ pub async fn scan_forced_residuals(name:String,publisher:String,install_location
 fn backup_registry(path:&str,destination:&Path)->Result<(),String>{
     if !registry_exists(path){return Ok(());}
     let file=destination.join(format!("registry-{}.reg",stable_id(path)));
-    let output=Command::new("reg.exe").args(["export",path,file.to_string_lossy().as_ref(),"/y"]).output().map_err(|e|e.to_string())?;
+    let output=hidden_windows_command("reg.exe").args(["export",path,file.to_string_lossy().as_ref(),"/y"]).output().map_err(|e|e.to_string())?;
     if output.status.success(){Ok(())}else if !registry_exists(path){Ok(())}else{
         let detail=String::from_utf8_lossy(&output.stderr).trim().to_string();
         if detail.is_empty(){Err(format!("Backup registro non riuscito: {path}"))}else{Err(format!("Backup registro non riuscito: {path} — {detail}"))}
@@ -623,14 +636,14 @@ fn backup_registry(path:&str,destination:&Path)->Result<(),String>{
 fn elevated_windows_wait(executable:&str,arguments:&[String])->Result<(),String>{
     let params=arguments.iter().map(|value|quote_windows_argument(value)).collect::<Vec<_>>().join(" ");
     let script=r#"$exe=$env:DAV_ELEVATED_EXE;$params=$env:DAV_ELEVATED_PARAMS;if([string]::IsNullOrWhiteSpace($params)){$p=Start-Process -FilePath $exe -Verb RunAs -Wait -PassThru}else{$p=Start-Process -FilePath $exe -ArgumentList $params -Verb RunAs -Wait -PassThru};exit $p.ExitCode"#;
-    let status=Command::new("powershell.exe").env("DAV_ELEVATED_EXE",executable).env("DAV_ELEVATED_PARAMS",params).args(["-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-Command",script]).status().map_err(|e|e.to_string())?;
+    let status=hidden_windows_command("powershell.exe").env("DAV_ELEVATED_EXE",executable).env("DAV_ELEVATED_PARAMS",params).args(["-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-Command",script]).status().map_err(|e|e.to_string())?;
     if status.success(){Ok(())}else{Err(format!("Operazione con privilegi amministrativi non riuscita: {executable}"))}
 }
 
 
 #[cfg(target_os="windows")]
 fn registry_exists(path:&str)->bool{
-    Command::new("reg.exe").args(["query",path]).output().map(|output|output.status.success()).unwrap_or(false)
+    hidden_windows_command("reg.exe").args(["query",path]).output().map(|output|output.status.success()).unwrap_or(false)
 }
 
 #[cfg(target_os="windows")]
@@ -640,7 +653,7 @@ fn is_default_registry_value_name(value_name:&str)->bool{
 
 #[cfg(target_os="windows")]
 fn registry_value_exists(path:&str,value_name:&str)->bool{
-    let mut command=Command::new("reg.exe");
+    let mut command=hidden_windows_command("reg.exe");
     command.args(["query",path]);
     if is_default_registry_value_name(value_name){command.arg("/ve");}else{command.args(["/v",value_name]);}
     command.output().map(|output|output.status.success()).unwrap_or(false)
@@ -652,7 +665,7 @@ fn delete_path(path:&Path)->Result<(),String>{
     #[cfg(target_os="windows")]
     {
         let script=r#"Add-Type -AssemblyName Microsoft.VisualBasic;$p=$env:DAV_TARGET;if(Test-Path -LiteralPath $p -PathType Container){[Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory($p,[Microsoft.VisualBasic.FileIO.UIOption]::OnlyErrorDialogs,[Microsoft.VisualBasic.FileIO.RecycleOption]::SendToRecycleBin)}elseif(Test-Path -LiteralPath $p){[Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile($p,[Microsoft.VisualBasic.FileIO.UIOption]::OnlyErrorDialogs,[Microsoft.VisualBasic.FileIO.RecycleOption]::SendToRecycleBin)}"#;
-        let output=Command::new("powershell.exe").env("DAV_TARGET",path).args(["-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-Command",script]).output().map_err(|e|e.to_string())?;
+        let output=hidden_windows_command("powershell.exe").env("DAV_TARGET",path).args(["-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-Command",script]).output().map_err(|e|e.to_string())?;
         if output.status.success()&&!path.exists(){return Ok(());}
         let ps1=std::env::temp_dir().join(format!("davuninstall-{}.ps1",stable_id(&path.to_string_lossy())));
         let elevated_script=r#"param([string]$Target);Add-Type -AssemblyName Microsoft.VisualBasic;if(Test-Path -LiteralPath $Target -PathType Container){[Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory($Target,[Microsoft.VisualBasic.FileIO.UIOption]::OnlyErrorDialogs,[Microsoft.VisualBasic.FileIO.RecycleOption]::SendToRecycleBin)}elseif(Test-Path -LiteralPath $Target){[Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile($Target,[Microsoft.VisualBasic.FileIO.UIOption]::OnlyErrorDialogs,[Microsoft.VisualBasic.FileIO.RecycleOption]::SendToRecycleBin)}"#;
@@ -883,7 +896,7 @@ fn quote_windows_argument(value:&str)->String{
 fn elevated_windows_spawn(executable:&str,arguments:&[String])->Result<(),String>{
     let params=arguments.iter().map(|value|quote_windows_argument(value)).collect::<Vec<_>>().join(" ");
     let script=r#"$exe=$env:DAV_UNINSTALL_EXE;$params=$env:DAV_UNINSTALL_PARAMS;if([string]::IsNullOrWhiteSpace($params)){Start-Process -FilePath $exe -Verb RunAs}else{Start-Process -FilePath $exe -ArgumentList $params -Verb RunAs}"#;
-    let status=Command::new("powershell.exe").env("DAV_UNINSTALL_EXE",executable).env("DAV_UNINSTALL_PARAMS",params).args(["-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-Command",script]).status().map_err(|e|format!("Impossibile richiedere i privilegi amministrativi per '{}': {e}",executable))?;
+    let status=hidden_windows_command("powershell.exe").env("DAV_UNINSTALL_EXE",executable).env("DAV_UNINSTALL_PARAMS",params).args(["-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-Command",script]).status().map_err(|e|format!("Impossibile richiedere i privilegi amministrativi per '{}': {e}",executable))?;
     if status.success(){Ok(())}else{Err(format!("Avvio con privilegi amministrativi annullato o non riuscito per '{}'.",executable))}
 }
 
@@ -891,7 +904,7 @@ fn elevated_windows_spawn(executable:&str,arguments:&[String])->Result<(),String
 fn elevated_windows_uninstaller_wait(executable:&str,arguments:&[String])->Result<i32,String>{
     let params=arguments.iter().map(|value|quote_windows_argument(value)).collect::<Vec<_>>().join(" ");
     let script=r#"$exe=$env:DAV_UNINSTALL_EXE;$params=$env:DAV_UNINSTALL_PARAMS;if([string]::IsNullOrWhiteSpace($params)){$p=Start-Process -FilePath $exe -Verb RunAs -Wait -PassThru}else{$p=Start-Process -FilePath $exe -ArgumentList $params -Verb RunAs -Wait -PassThru};if($null -eq $p.ExitCode){exit 0}else{exit $p.ExitCode}"#;
-    let status=Command::new("powershell.exe").env("DAV_UNINSTALL_EXE",executable).env("DAV_UNINSTALL_PARAMS",params).args(["-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-Command",script]).status().map_err(|e|format!("Impossibile attendere il disinstallatore elevato '{}': {e}",executable))?;
+    let status=hidden_windows_command("powershell.exe").env("DAV_UNINSTALL_EXE",executable).env("DAV_UNINSTALL_PARAMS",params).args(["-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-Command",script]).status().map_err(|e|format!("Impossibile attendere il disinstallatore elevato '{}': {e}",executable))?;
     Ok(status.code().unwrap_or(-1))
 }
 

@@ -1,4 +1,4 @@
-# BUILD NOTES — _davUNINSTALL v26.10.2
+# BUILD NOTES — _davUNINSTALL v26.10.3
 
 Stack: Tauri 2, Rust 2021, JavaScript ES modules e Vite 8.
 
@@ -12,7 +12,7 @@ La pulizia TEMP è limitata alla cartella TEMP dell'utente su Windows. Le direct
 
 ## Standard release
 
-La v26.10.2 adotta il versioning `YY.M.REVISIONE` e i metadata ufficiali `_davstudios`. L'identifier storico `studio.dav.uninstall` resta invariato. La categoria pacchetto è `Productivity`; le build Linux includono metadata Debian `section=utils` e `priority=optional`.
+La v26.10.3 adotta il versioning `YY.M.REVISIONE` e i metadata ufficiali `_davstudios`. L'identifier storico `studio.dav.uninstall` resta invariato. La categoria pacchetto è `Productivity`; le build Linux includono metadata Debian `section=utils` e `priority=optional`.
 
 `.github/workflows/release.yml` si attiva sui tag `v*`, verifica la sincronizzazione di `package.json`, `package-lock.json`, `tauri.conf.json`, `Cargo.toml` e `Cargo.lock`, richiede nel commit associato al tag una Description contenente entrambe le sezioni 🇮🇹 e 🇺🇸, esegue i test e pubblica una GitHub Release stabile usando automaticamente quella Description come corpo della release:
 

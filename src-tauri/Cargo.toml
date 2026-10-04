@@ -1,6 +1,6 @@
 [package]
 name = "davuninstall"
-version = "26.10.2"
+version = "26.10.3"
 description = "_davUNINSTALL — Windows-first application uninstaller and cross-platform residual analyzer by _davstudios."
 authors = ["_davstudios"]
 license = "MIT"

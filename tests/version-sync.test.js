@@ -15,7 +15,7 @@ const cargoLockVersion = cargoLockText.match(/\[\[package\]\]\r?\nname = "davuni
 const mainSource = readFileSync(resolve(root, 'src/main.js'), 'utf8');
 
 test('versioni tecniche sincronizzate', () => {
-  assert.equal(packageVersion, '26.10.2');
+  assert.equal(packageVersion, '26.10.3');
   assert.equal(packageLock.version, packageVersion);
   assert.equal(packageLock.packages[''].version, packageVersion);
   assert.equal(tauriVersion, packageVersion);
@@ -29,8 +29,9 @@ test('Cargo.lock resta leggibile con terminatori Windows CRLF', () => {
   assert.equal(windowsCargoLockVersion, packageVersion);
 });
 
-test('interfaccia legge versione da Tauri', () => {
-  assert.match(mainSource, /getVersion/);
+test('interfaccia non espone la versione di release', () => {
+  assert.doesNotMatch(mainSource, /getVersion/);
+  assert.doesNotMatch(mainSource, /state\.version/);
   assert.doesNotMatch(mainSource, /v\d+\.\d+\.\d+/);
   assert.doesNotMatch(mainSource, /version:'\d+\.\d+\.\d+'/);
 });

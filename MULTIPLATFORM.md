@@ -1,16 +1,16 @@
-# Supporto multipiattaforma — _davUNINSTALL v26.10.2
+# Supporto multipiattaforma — _davUNINSTALL v26.10.3
 
 ## Windows
 
-È la piattaforma principale della v26.10.2. Supporta lettura dei programmi dal Registro, avvio e attesa del disinstallatore registrato, modalità Basso/Medio/Alto, scansione profonda di file/cartelle e Registro, backup, rimozione, verifica post-pulizia e pulizia selettiva della TEMP utente.
+È la piattaforma principale della v26.10.3. Supporta lettura dei programmi dal Registro, avvio e attesa del disinstallatore registrato, modalità Basso/Medio/Alto, scansione profonda di file/cartelle e Registro, backup, rimozione, verifica post-pulizia e pulizia selettiva della TEMP utente.
 
 ## macOS
 
-La v26.10.2 rileva applicazioni `.app` in `/Applications` e `~/Applications` e può analizzare residui utente con regole conservative. La rimozione profonda automatica e la pulizia temporanei generalizzata restano disabilitate per evitare operazioni distruttive non ancora validate sulla piattaforma.
+La v26.10.3 rileva applicazioni `.app` in `/Applications` e `~/Applications` e può analizzare residui utente con regole conservative. La rimozione profonda automatica e la pulizia temporanei generalizzata restano disabilitate per evitare operazioni distruttive non ancora validate sulla piattaforma.
 
 ## Linux
 
-La v26.10.2 rileva pacchetti `dpkg` e applicazioni Flatpak quando i relativi strumenti sono disponibili e può analizzare residui con regole conservative. La rimozione profonda automatica e la pulizia temporanei generalizzata restano disabilitate.
+La v26.10.3 rileva pacchetti `dpkg` e applicazioni Flatpak quando i relativi strumenti sono disponibili e può analizzare residui con regole conservative. La rimozione profonda automatica e la pulizia temporanei generalizzata restano disabilitate.
 
 ## Release
 

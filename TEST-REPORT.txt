@@ -1,16 +1,19 @@
-_davUNINSTALL v26.10.2
+_davUNINSTALL v26.10.3
 
 Status: PASS
-Tests: 56/56 passed via `npm test`.
-Windows CRLF regression: the complete 56-test suite also passes with `src-tauri/Cargo.lock` physically converted to CRLF line endings.
+Tests: 59/59 passed via `npm test` after the final source changes and repository normalization.
+Windows CRLF regression: the complete 59-test suite also passes with `src-tauri/Cargo.lock` physically converted to CRLF line endings.
+Final archive verification: the complete 59-test suite passes again after extracting the generated release source ZIP into a clean directory.
 JavaScript: source, test and Vite configuration syntax checks passed with `node --check`.
 JSON: package, package-lock, Tauri and capability configuration parsed successfully.
 YAML: `.github/workflows/release.yml` parsed successfully.
-Version sync: package.json, package-lock.json, Cargo.toml, Cargo.lock and Tauri configuration are aligned on 26.10.2.
+Shell: project shell scripts passed `bash -n` syntax validation.
+Version sync: package.json, both relevant package-lock.json entries, Cargo.toml, the _davUNINSTALL Cargo.lock package and Tauri configuration are aligned on 26.10.3.
+Motion/UI: the interface uses the _davstudios website v52 motion language, page transitions are staged, the ordinary UI does not expose the release version and the Italian support wording is `Offrimi Un Caffè`.
+Windows console behavior: Release builds use the Windows GUI subsystem; internal PowerShell/reg.exe helper commands use CREATE_NO_WINDOW while real application uninstallers keep their intended UI/UAC behavior.
 Metadata: _davstudios publisher, davstudios.it homepage, © 2026 copyright, MIT license, Productivity category and Debian metadata verified.
+Repository normalization: all 60 files already present in v26.10.2 are byte-different in v26.10.3. PNG, ICO and ICNS icon graphics were verified pixel-for-pixel identical at every available size/frame.
 Stable release: GitHub Actions builds Windows NSIS, macOS Universal DMG and Linux AppImage/DEB, reads the bilingual 🇮🇹/🇺🇸 Description from the tagged commit and rejects release commits missing either language section.
 Linux hardening: Microsoft apt repositories are disabled when present before installing the Ubuntu Tauri dependencies.
-Functional preservation: uninstall/residual engine, Windows Registry safety flow, TEMP cleanup, Rust backend, styles, motion, Vite configuration and application behavior remain functionally unchanged; source-file differences are limited to neutral repository normalization and release metadata updates.
-Icons: all Tauri icon assets were refreshed at binary/container level for repository normalization and verified pixel-for-pixel identical to the previous release.
-Rust/Tauri native compile: not executed in this environment because Cargo is unavailable; final native build is delegated to the development machine/GitHub Actions runners.
-
+Functional preservation: uninstall/residual engine, Registry safety flow, TEMP cleanup, Low/Medium/High modes, forced scan and verification logic remain preserved; behavior changes are limited to the agreed motion/UI polish and Windows console suppression.
+Rust/Tauri native compile: not executed in this preparation environment because Cargo is unavailable. `npm run build` could not run because project dependencies are not installed locally; the attempted dependency installation could not complete in the sandbox. Final native/bundle compilation remains delegated to the development machine and GitHub Actions runners.

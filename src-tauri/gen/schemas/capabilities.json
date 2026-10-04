@@ -1,2 +1,3 @@
 {"default":{"identifier":"default","description":"Default desktop capability for _davUNINSTALL","local":true,"windows":["main"],"permissions":["core:default",{"identifier":"opener:allow-open-url","allow":[{"url":"https://buymeacoffee.com/davstudios"},{"url":"https://www.davstudios.it"},{"url":"https://www.davstudios.it/en"}]}]}}
 
+

@@ -136,3 +136,4 @@ pub fn reveal_path(path:String)->Result<(),String>{
     status.map_err(|error|error.to_string()).and_then(|status|if status.success(){Ok(())}else{Err("Impossibile aprire il percorso.".into())})
 }
 
+

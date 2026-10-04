@@ -1,5 +1,16 @@
 # Changelog
 
+## 26.10.3
+
+- Allineato il motion system dell'interfaccia al sito `_davstudios` v52 con easing, reveal, stagger, page exit/entrance e reveal radiale del tema condivisi.
+- Aggiunte transizioni reali tra Applicazioni, Residui, Temporanei e Impostazioni, incluso stato attivo della sidebar e supporto `prefers-reduced-motion`.
+- Rimossa la versione dall'interfaccia ordinaria; la versione resta gestita esclusivamente nei manifest tecnici e nelle GitHub Release.
+- Aggiornata la dicitura italiana Buy Me A Coffee da `Comprami Un Caffè` a `Offrimi Un Caffè`.
+- Configurata la build Windows Release con `windows_subsystem = "windows"` per evitare la console CMD dell'app e nascosti i processi helper interni `PowerShell`/`reg.exe` tramite `CREATE_NO_WINDOW`.
+- Normalizzato `README.md` con struttura bilingue stabile e indipendente dalla singola release.
+- Sincronizzata la versione 26.10.3 in package.json, package-lock.json, Cargo.toml, Cargo.lock, configurazione Tauri, documentazione e test.
+- Preservata la logica di disinstallazione, scansione, backup, rivalidazione, pulizia residui e TEMP.
+
 ## 26.10.2
 - Eseguita la repository normalization completa dell’intero pacchetto: tutti i file tracciati ricevono una modifica reale ma neutra per riallinearli al commit della release corrente.
 - Sincronizzata la versione 26.10.2 in package.json, package-lock.json, Cargo.toml, Cargo.lock, configurazione Tauri, documentazione e test.

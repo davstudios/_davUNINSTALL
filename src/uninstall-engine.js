@@ -6,3 +6,4 @@ export function safeItems(report){return [...(report?.filesystem||[]),...(report
 export function selectedSafeIds(report,selected){const allowed=new Set(safeItems(report).map((item)=>item.id));return [...selected].filter((id)=>allowed.has(id));}
 export function platformCanUninstall(app){return Boolean(app?.canUninstall&&app?.uninstallString);}
 
+

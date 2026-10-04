@@ -15,10 +15,10 @@ const main=fs.readFileSync('src/main.js','utf8');
 test('Windows launcher preserves the proven suite flow',()=>{assert.match(launcher,/npm install --no-audit --no-fund/i);assert.match(launcher,/npm run desktop/i);assert.doesNotMatch(launcher,/if not exist \"node_modules/);assert.ok(launcher.indexOf('prepare-windows-dev.ps1')<launcher.indexOf('npm install --no-audit --no-fund'));});
 test('Vite preserves Tauri isolation',()=>{assert.match(vite,/const host = process\.env\.TAURI_DEV_HOST/);assert.match(vite,/src-tauri/);assert.match(vite,/strictPort:true/);});
 test('frontend and Tauri dependency versions match suite base',()=>{assert.equal(packageJson.dependencies['@tauri-apps/api'],'2.11.1');assert.equal(packageJson.devDependencies['@tauri-apps/cli'],'2.11.4');assert.equal(packageJson.devDependencies.vite,'8.2.2');});
-test('stable metadata is coherent',()=>{const rustVersion=cargo.match(/^version\s*=\s*"([^"]+)"/m)?.[1];assert.equal(packageJson.version,'26.10.2');assert.equal(tauri.version,packageJson.version);assert.equal(rustVersion,packageJson.version);for(const path of ['README.md','CHANGELOG.md','src-tauri/icons/icon.ico'])assert.equal(fs.existsSync(path),true);});
+test('stable metadata is coherent',()=>{const rustVersion=cargo.match(/^version\s*=\s*"([^"]+)"/m)?.[1];assert.equal(packageJson.version,'26.10.3');assert.equal(tauri.version,packageJson.version);assert.equal(rustVersion,packageJson.version);for(const path of ['README.md','CHANGELOG.md','src-tauri/icons/icon.ico'])assert.equal(fs.existsSync(path),true);});
 test('safety backend revalidates and backs up registry before deletion',()=>{assert.match(backend,/still_installed\(&request\.app\)/);assert.match(backend,/scan_residuals_sync_mode\(request\.app\.clone\(\),post_uninstall\)/);assert.match(backend,/confidence=="exact"\|\|item\.confidence=="high"/);assert.match(backend,/backup_registry\(&item\.path,&backup\)/);assert.match(backend,/execute_cleanup_plan_windows/);assert.match(backend,/reg\.exe delete \$item\.path/);assert.match(backend,/SendToRecycleBin/);});
 test('temporary cleanup is intentionally Windows-only in stable release',()=>{assert.match(backend,/cfg\(target_os="windows"\)/);assert.match(backend,/supported:false/);});
-test('suite visual tokens and motion are present',()=>{assert.match(styles,/--accent:#006edb/);assert.match(styles,/Plus Jakarta Sans/);assert.match(main,/Comprami Un Caffè/);assert.match(motion,/--motion-ease-out/);assert.match(motion,/prefers-reduced-motion/);});
+test('suite visual tokens and motion are present',()=>{assert.match(styles,/--accent:#006edb/);assert.match(styles,/Plus Jakarta Sans/);assert.match(main,/Offrimi Un Caffè/);assert.doesNotMatch(main,/Comprami Un Caffè/);assert.match(motion,/--motion-ease-out/);assert.match(motion,/prefers-reduced-motion/);});
 
 test('root layout matches the proven _davCONVERT shell',()=>{assert.match(styles,/html,body,#app\{margin:0;width:100%;height:100%/);assert.match(styles,/\.shell\{display:grid;grid-template-columns:220px 1fr;height:100vh\}/);assert.match(styles,/\.sidebar\{background:/);assert.match(styles,/\.main\{min-width:0;overflow:auto;padding:/);});
 
@@ -187,5 +187,37 @@ test('Linux release workflow ignores the unrelated Microsoft apt repository',()=
 
 test('metadata pacchetto _davstudios presenti',()=>{assert.equal(packageJson.author,'_davstudios');assert.equal(packageJson.license,'MIT');assert.equal(packageJson.homepage,'https://davstudios.it');assert.equal(tauri.bundle.category,'Productivity');assert.equal(tauri.bundle.publisher,'_davstudios');assert.equal(tauri.bundle.homepage,'https://davstudios.it');assert.equal(tauri.bundle.copyright,'© 2026 _davstudios');assert.equal(tauri.bundle.license,'MIT');assert.equal(tauri.bundle.licenseFile,'../LICENSE');assert.equal(tauri.bundle.linux.deb.section,'utils');assert.equal(tauri.bundle.linux.deb.priority,'optional');assert.match(cargo,/license = "MIT"/);assert.match(cargo,/homepage = "https:\/\/davstudios\.it"/);});
 test('identifier storico resta invariato',()=>{assert.equal(tauri.identifier,'studio.dav.uninstall');});
-test('package metadata documenta lo standard release',()=>{const metadata=fs.readFileSync('PACKAGE-METADATA.md','utf8');assert.match(metadata,/_davUNINSTALL/);assert.match(metadata,/26\.10\.2/);assert.match(metadata,/_davstudios/);assert.match(metadata,/Productivity/);assert.match(metadata,/studio\.dav\.uninstall/);assert.match(metadata,/Debian section: `utils`/);});
+test('package metadata documenta lo standard release',()=>{const metadata=fs.readFileSync('PACKAGE-METADATA.md','utf8');assert.match(metadata,/_davUNINSTALL/);assert.match(metadata,/26\.10\.3/);assert.match(metadata,/_davstudios/);assert.match(metadata,/Productivity/);assert.match(metadata,/studio\.dav\.uninstall/);assert.match(metadata,/Debian section: `utils`/);});
 
+
+
+test('motion system matches the _davstudios website v52 language',()=>{
+  assert.match(motion,/--motion-duration-base:720ms/);
+  assert.match(motion,/--motion-duration-slow:940ms/);
+  assert.match(motion,/--motion-step:72ms/);
+  assert.match(motion,/--motion-page-out:170ms/);
+  assert.match(motion,/--motion-page-in:430ms/);
+  assert.match(motion,/cubic-bezier\(\.16,1,\.3,1\)/);
+  assert.match(motion,/blur\(3px\)/);
+  assert.match(motion,/dav-theme-reveal 680ms/);
+  assert.match(motion,/prefers-reduced-motion:reduce/);
+  assert.match(main,/navigatePage/);
+  assert.match(main,/is-page-leaving/);
+});
+
+test('Windows release uses GUI subsystem and internal helpers stay console-free',()=>{
+  const rustMain=fs.readFileSync('src-tauri/src/main.rs','utf8');
+  assert.match(rustMain,/cfg_attr\(not\(debug_assertions\), windows_subsystem = "windows"\)/);
+  assert.match(backend,/CREATE_NO_WINDOW/);
+  assert.match(backend,/creation_flags\(CREATE_NO_WINDOW\)/);
+  assert.match(backend,/hidden_windows_command\("powershell\.exe"\)/);
+  assert.match(backend,/hidden_windows_command\("reg\.exe"\)/);
+});
+
+test('ordinary UI hides release version and uses final support wording',()=>{
+  assert.doesNotMatch(main,/getVersion/);
+  assert.doesNotMatch(main,/state\.version/);
+  assert.doesNotMatch(main,/_DAVUNINSTALL · V/);
+  assert.match(main,/MIT · Open source/);
+  assert.match(main,/Offrimi Un Caffè/);
+});
